@@ -5,10 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\TurismoReal_Reservas.Core\TurismoReal_Reservas.Core.csproj" />
     <ProjectReference Include="..\TurismoReal_Reservas.Infra\TurismoReal_Reservas.Infra.csproj" />
   </ItemGroup>

@@ -10,6 +10,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TurismoReal_Reservas.Core.Interfaces;
+using TurismoReal_Reservas.Infra.Repositories;
 
 namespace TurismoReal_Reservas.Api
 {
@@ -25,6 +27,7 @@ namespace TurismoReal_Reservas.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddTransient<IReservaRepository, ReservaRepository>();
             services.AddControllers();
         }
 
