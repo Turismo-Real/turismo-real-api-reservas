@@ -32,8 +32,9 @@ namespace TurismoReal_Reservas.Api.Controllers
         [HttpGet("{id}")]
         public async Task<object> GetReserva(int id)
         {
-            await Task.Delay(1);
-            throw new NotImplementedException();
+            Reserva reserva = await _reservaRepository.GetReserva(id);
+            if (reserva.idReserva == 0) return new { message = $"No existe reserva con id {id}." };
+            return reserva;
         }
 
         // POST /api/v1/reserva/

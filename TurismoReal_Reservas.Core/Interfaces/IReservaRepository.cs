@@ -11,7 +11,7 @@ namespace TurismoReal_Reservas.Core.Interfaces
         // GET ALL RESERVAS
         Task<List<object>> GetReservas();
         // GET RESERVA BY ID
-        Task<object> GetReserva(int id);
+        Task<Reserva> GetReserva(int id);
         // ADD RESERVA
         Task<int> CreateReserva(Reserva reserva);
         // UPDATE RESERVA

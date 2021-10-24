@@ -15,8 +15,8 @@ namespace TurismoReal_Reservas.Core.Entities
         [DataType(DataType.Date)]
         public DateTime fecHasta { get; set; }
         public double valorArriendo { get; set; }
-        public DateTime fecHoraCheckIn { get; set; }
-        public DateTime fecHoraCheckOut { get; set; }
+        public DateTime? fecHoraCheckIn { get; set; }
+        public DateTime? fecHoraCheckOut { get; set; }
         public bool checkInConforme { get; set; }
         public bool checkOutConforme { get; set; }
         public string estadoCheckIn { get; set; }

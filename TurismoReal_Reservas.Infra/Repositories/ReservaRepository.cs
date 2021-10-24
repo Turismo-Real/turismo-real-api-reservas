@@ -26,10 +26,39 @@ namespace TurismoReal_Reservas.Infra.Repositories
         }
 
         // GET RESERVA BY ID
-        public async Task<object> GetReserva(int id)
+        public async Task<Reserva> GetReserva(int id)
         {
-            await Task.Delay(1);
-            throw new NotImplementedException();
+            _context.OpenConnection();
+            OracleCommand cmd = new OracleCommand("sp_obten_reserva_id", _context.GetConnection());
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.BindByName = true;
+            cmd.Parameters.Add("reserva_id", OracleDbType.Int32).Direction = ParameterDirection.Input;
+            cmd.Parameters.Add("reserva", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+
+            cmd.Parameters["reserva_id"].Value = id;
+            OracleDataReader reader = (OracleDataReader) await cmd.ExecuteReaderAsync();
+
+            Reserva reserva = new Reserva();
+            while (reader.Read())
+            {
+                reserva.idReserva = Convert.ToInt32(reader.GetValue(reader.GetOrdinal("id_reserva")).ToString());
+                reserva.fecHoraReserva = Convert.ToDateTime(reader.GetValue(reader.GetOrdinal("fechora_reserva")).ToString());
+                reserva.fecDesde = Convert.ToDateTime(reader.GetValue(reader.GetOrdinal("fec_desde")).ToString());
+                reserva.fecHasta = Convert.ToDateTime(reader.GetValue(reader.GetOrdinal("fec_hasta")).ToString());
+                reserva.valorArriendo = Convert.ToInt32(reader.GetValue(reader.GetOrdinal("valor_arriendo")).ToString());
+                reserva.fecHoraCheckIn = ConvertStringToDate(reader.GetValue(reader.GetOrdinal("fechora_checkin")).ToString());
+                reserva.fecHoraCheckOut = ConvertStringToDate(reader.GetValue(reader.GetOrdinal("fechora_checkout")).ToString());
+                reserva.checkInConforme = ConvertStringToBool(reader.GetValue(reader.GetOrdinal("checkin_conforme")).ToString());
+                reserva.checkOutConforme = ConvertStringToBool(reader.GetValue(reader.GetOrdinal("checkout_conforme")).ToString());
+                reserva.estadoCheckIn = reader.GetValue(reader.GetOrdinal("estado_checkin")).ToString();
+                reserva.estadoCheckOut = reader.GetValue(reader.GetOrdinal("estado_checkout")).ToString();
+                reserva.estadoReserva = reader.GetValue(reader.GetOrdinal("estado")).ToString();
+                reserva.idUsuario = Convert.ToInt32(reader.GetValue(reader.GetOrdinal("id_usuario")).ToString());
+                reserva.idDepartamento = Convert.ToInt32(reader.GetValue(reader.GetOrdinal("id_departamento")).ToString());
+            }
+            _context.CloseConnection();
+            return reserva;
         }
 
         // ADD RESERVA
@@ -80,6 +109,23 @@ namespace TurismoReal_Reservas.Infra.Repositories
             await cmd.ExecuteNonQueryAsync();
             int removed = Convert.ToInt32(cmd.Parameters["removed"].Value.ToString());
             return removed;
+        }
+
+        // Convertir string bd a DateTime
+        public DateTime? ConvertStringToDate(string fecha)
+        {
+            if (fecha.Equals(string.Empty)){
+                return null;
+            }
+            return Convert.ToDateTime(fecha);
+        }
+
+        // Convertir string a bool
+        public bool ConvertStringToBool(string conforme)
+        {
+            if (conforme.Equals(string.Empty)) return false;
+            if (Convert.ToInt32(conforme) == 0) return false;
+            return true;
         }
 
     }
