@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace TurismoReal_Reservas.Core.Entities
 {
@@ -7,7 +8,11 @@ namespace TurismoReal_Reservas.Core.Entities
     {
         public int idReserva { get; set; }
         public DateTime fecHoraReserva { get; set; }
+
+        [DataType(DataType.Date)]
         public DateTime fecDesde { get; set; }
+
+        [DataType(DataType.Date)]
         public DateTime fecHasta { get; set; }
         public double valorArriendo { get; set; }
         public DateTime fecHoraCheckIn { get; set; }

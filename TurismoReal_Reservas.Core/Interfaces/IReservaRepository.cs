@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using TurismoReal_Reservas.Core.Entities;
 
 namespace TurismoReal_Reservas.Core.Interfaces
 {
@@ -12,7 +13,7 @@ namespace TurismoReal_Reservas.Core.Interfaces
         // GET RESERVA BY ID
         Task<object> GetReserva(int id);
         // ADD RESERVA
-        Task<object> CreateReserva(object reserva);
+        Task<int> CreateReserva(Reserva reserva);
         // UPDATE RESERVA
         Task<object> UpdateReserva(int id, object reserva);
         // DELETE RESERVA
