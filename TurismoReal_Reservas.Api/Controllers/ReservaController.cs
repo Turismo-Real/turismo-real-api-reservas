@@ -22,6 +22,8 @@ namespace TurismoReal_Reservas.Api.Controllers
         [HttpGet]
         public async Task<List<object>> GetReservas()
         {
+
+
             await Task.Delay(1);
             throw new NotImplementedException();
         }
@@ -60,8 +62,11 @@ namespace TurismoReal_Reservas.Api.Controllers
         [HttpDelete("{id}")]
         public async Task<object> DeleteReserva(int id)
         {
-            await Task.Delay(1);
-            throw new NotImplementedException();
+            int removed = await _reservaRepository.DeleteReserva(id);
+
+            if (removed == -1) return new { message = $"No existe reserva con id {id}.", removed = false };
+            if (removed == 0) return new { message = "Error al eliminar reserva.", removed = false };
+            return new { message = "Reserva eliminada.", removed = true };
         }
 
     }

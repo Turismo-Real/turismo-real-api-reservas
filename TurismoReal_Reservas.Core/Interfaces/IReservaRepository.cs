@@ -17,6 +17,6 @@ namespace TurismoReal_Reservas.Core.Interfaces
         // UPDATE RESERVA
         Task<object> UpdateReserva(int id, object reserva);
         // DELETE RESERVA
-        Task<object> DeleteReserva(int id);
+        Task<int> DeleteReserva(int id);
     }
 }
