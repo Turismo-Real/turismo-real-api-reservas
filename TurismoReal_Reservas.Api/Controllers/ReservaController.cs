@@ -20,12 +20,10 @@ namespace TurismoReal_Reservas.Api.Controllers
         
         // GET /api/v1/reserva
         [HttpGet]
-        public async Task<List<object>> GetReservas()
+        public async Task<List<Reserva>> GetReservas()
         {
-
-
-            await Task.Delay(1);
-            throw new NotImplementedException();
+            List<Reserva> reservas = await _reservaRepository.GetReservas();
+            return reservas;
         }
 
         // GET /api/v1/reserva/{id}
@@ -53,10 +51,13 @@ namespace TurismoReal_Reservas.Api.Controllers
 
         // PUT /api/v1/reserva/{id}
         [HttpPut("{id}")]
-        public async Task<object> UpdateReserva(int id, [FromBody] object reserva)
+        public async Task<object> UpdateReserva(int id, [FromBody] Reserva reserva)
         {
-            await Task.Delay(1);
-            throw new NotImplementedException();
+            int updated = await _reservaRepository.UpdateReserva(id, reserva);
+
+            if (updated == -1) return new { message = $"No existe reserva con id {id}.", updated = false };
+            if (updated == 0) return new { message = "Error al actualizar reserva", updated = false };
+            return new { message = "Reserva actualizada.", updated = true };
         }
 
         // DELETE /api/v1/reserva/{id}
