@@ -48,6 +48,8 @@ namespace TurismoReal_Reservas.Infra.Repositories
                 reserva.estadoReserva = reader.GetValue(reader.GetOrdinal("estado")).ToString();
                 reserva.idUsuario = Convert.ToInt32(reader.GetValue(reader.GetOrdinal("id_usuario")).ToString());
                 reserva.idDepartamento = Convert.ToInt32(reader.GetValue(reader.GetOrdinal("id_departamento")).ToString());
+                reserva.servicios = GetServicios(reserva.idReserva);
+                reserva.asistentes = GetAsistentes(reserva.idReserva);
                 reservas.Add(reserva);
             }
             _context.CloseConnection();
@@ -85,6 +87,7 @@ namespace TurismoReal_Reservas.Infra.Repositories
                 reserva.estadoReserva = reader.GetValue(reader.GetOrdinal("estado")).ToString();
                 reserva.idUsuario = Convert.ToInt32(reader.GetValue(reader.GetOrdinal("id_usuario")).ToString());
                 reserva.idDepartamento = Convert.ToInt32(reader.GetValue(reader.GetOrdinal("id_departamento")).ToString());
+                reserva.asistentes = GetAsistentes(reserva.idReserva);
             }
             _context.CloseConnection();
             return reserva;
@@ -177,6 +180,41 @@ namespace TurismoReal_Reservas.Infra.Repositories
             if (conforme.Equals(string.Empty)) return false;
             if (Convert.ToInt32(conforme) == 0) return false;
             return true;
+        }
+
+        public List<Servicio> GetServicios(int id)
+        {
+            List<Servicio> servicios = new List<Servicio>();
+            return servicios;
+        }
+
+        public List<Asistente> GetAsistentes(int id)
+        {
+            OracleCommand cmd = new OracleCommand("sp_obten_asistentes_reserva", _context.GetConnection());
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.BindByName = true;
+            cmd.Parameters.Add("reserva_id", OracleDbType.Int32).Direction = ParameterDirection.Input;
+            cmd.Parameters.Add("asistentes", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+
+            cmd.Parameters["reserva_id"].Value = id;
+            OracleDataReader reader = cmd.ExecuteReader();
+
+            List<Asistente> asistentes = new List<Asistente>();
+            while (reader.Read())
+            {
+                Asistente asistente = new Asistente();
+                asistente.pasaporte = reader.GetValue(reader.GetOrdinal("pasaporte")).ToString();
+                asistente.numRut = reader.GetValue(reader.GetOrdinal("numrut_asistente")).ToString();
+                asistente.dvRut = reader.GetValue(reader.GetOrdinal("dvrut_asistente")).ToString();
+                asistente.pNombre = reader.GetValue(reader.GetOrdinal("pnombre_asistente")).ToString();
+                asistente.sNombre = reader.GetValue(reader.GetOrdinal("snombre_asistente")).ToString();
+                asistente.pApellido = reader.GetValue(reader.GetOrdinal("apepat_asistente")).ToString();
+                asistente.sApellido = reader.GetValue(reader.GetOrdinal("apemat_asistente")).ToString();
+                asistente.email = reader.GetValue(reader.GetOrdinal("correo_asistente")).ToString();
+                asistentes.Add(asistente);
+            }
+            return asistentes;
         }
 
     }

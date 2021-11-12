@@ -2,6 +2,7 @@
 {
     public class Asistente
     {
+        public string pasaporte { get; set; }
         public string numRut { get; set; }
         public string dvRut { get; set; }
         public string pNombre { get; set; }
