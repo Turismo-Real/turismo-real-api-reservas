@@ -87,6 +87,7 @@ namespace TurismoReal_Reservas.Infra.Repositories
                 reserva.estadoReserva = reader.GetValue(reader.GetOrdinal("estado")).ToString();
                 reserva.idUsuario = Convert.ToInt32(reader.GetValue(reader.GetOrdinal("id_usuario")).ToString());
                 reserva.idDepartamento = Convert.ToInt32(reader.GetValue(reader.GetOrdinal("id_departamento")).ToString());
+                reserva.servicios = GetServicios(reserva.idReserva);
                 reserva.asistentes = GetAsistentes(reserva.idReserva);
             }
             _context.CloseConnection();
@@ -184,7 +185,28 @@ namespace TurismoReal_Reservas.Infra.Repositories
 
         public List<Servicio> GetServicios(int id)
         {
+            OracleCommand cmd = new OracleCommand("sp_obten_servicios_reserva", _context.GetConnection());
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.BindByName = true;
+            cmd.Parameters.Add("reserva_id", OracleDbType.Int32).Direction = ParameterDirection.Input;
+            cmd.Parameters.Add("servicios", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+
+            cmd.Parameters["reserva_id"].Value = id;
+            OracleDataReader reader = cmd.ExecuteReader();
+
             List<Servicio> servicios = new List<Servicio>();
+            while (reader.Read())
+            {
+                Servicio servicio = new Servicio();
+                servicio.id = Convert.ToInt32(reader.GetValue(reader.GetOrdinal("id_res_serv")).ToString());
+                servicio.idServicio = Convert.ToInt32(reader.GetValue(reader.GetOrdinal("id_servicio")).ToString());
+                servicio.servicio = reader.GetValue(reader.GetOrdinal("nombre_s")).ToString();
+                servicio.tipo = reader.GetValue(reader.GetOrdinal("tipo_s")).ToString();
+                servicio.valor = Convert.ToDouble(reader.GetValue(reader.GetOrdinal("valor_s")).ToString());
+                servicio.conductor = Convert.ToInt32(reader.GetValue(reader.GetOrdinal("id_conductor")).ToString());
+                servicios.Add(servicio);
+            }
             return servicios;
         }
 
