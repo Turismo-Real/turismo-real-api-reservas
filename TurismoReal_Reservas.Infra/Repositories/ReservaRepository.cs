@@ -278,11 +278,13 @@ namespace TurismoReal_Reservas.Infra.Repositories
                 servicio.servicio = reader.GetValue(reader.GetOrdinal("nombre_s")).ToString();
                 servicio.tipo = reader.GetValue(reader.GetOrdinal("tipo_s")).ToString();
                 servicio.valor = Convert.ToDouble(reader.GetValue(reader.GetOrdinal("valor_s")).ToString());
-                servicio.conductor = Convert.ToInt32(reader.GetValue(reader.GetOrdinal("id_conductor")).ToString());
+                servicio.conductor = Convert.ToInt32(GetIdConductor(reader.GetValue(reader.GetOrdinal("id_conductor")).ToString()));
                 servicios.Add(servicio);
             }
             return servicios;
         }
+
+        public string GetIdConductor(string conductor_id) => conductor_id.Equals(string.Empty) ? "0" : conductor_id;
 
         public List<Asistente> GetAsistentes(int id)
         {
