@@ -45,7 +45,9 @@ namespace TurismoReal_Reservas.Api.Controllers
             if (saved == -3) return new { message = "Ya existe una reserva en las fechas ingresadas.", saved = false };
             if (saved == -4) return new { message = "La reserva no debe superar los 30 días.", saved = false };
             if (saved == 0) return new { message = "Error al ingresar reserva.", saved = false };
-            return new { message = "Reserva ingresada correctamente.", saved = true, idReserva = saved };
+
+            Reserva nuevaReserva = await _reservaRepository.GetReserva(saved);
+            return new { message = "Reserva ingresada correctamente.", saved = true, reserva = nuevaReserva };
         }
 
         // PUT /api/v1/reserva/{id}

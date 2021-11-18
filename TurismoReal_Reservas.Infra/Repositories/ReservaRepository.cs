@@ -116,8 +116,82 @@ namespace TurismoReal_Reservas.Infra.Repositories
             await cmd.ExecuteNonQueryAsync();
             // Retorna el id de la reserva
             int saved = Convert.ToInt32(cmd.Parameters["saved"].Value.ToString());
+            // Agregar servicios
+            if (saved <= 0) return saved;
+            AddServices(saved, reserva.servicios);
+            // Agregar asistentes
+            AddAsistentes(saved, reserva.asistentes);
             _context.CloseConnection();
             return saved;
+        }
+
+        public bool AddServices(int id, List<Servicio> services)
+        {
+            try
+            {
+                OracleCommand cmd = new OracleCommand("sp_agregar_servicio_reserva", _context.GetConnection());
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                cmd.BindByName = true;
+                cmd.Parameters.Add("reserva_id", OracleDbType.Int32).Direction = ParameterDirection.Input;
+                cmd.Parameters.Add("servicio_id", OracleDbType.Int32).Direction = ParameterDirection.Input;
+                cmd.Parameters.Add("conductor_id", OracleDbType.Int32).Direction = ParameterDirection.Input;
+                cmd.Parameters.Add("saved", OracleDbType.Int32).Direction = ParameterDirection.Output;
+
+                foreach (Servicio service in services)
+                {
+                    cmd.Parameters["reserva_id"].Value = id;
+                    cmd.Parameters["servicio_id"].Value = service.idServicio;
+                    cmd.Parameters["conductor_id"].Value = service.conductor;
+                    OracleDataReader reader = cmd.ExecuteReader();
+                    int saved = int.Parse(cmd.Parameters["saved"].Value.ToString());
+                }
+                return true;
+            } catch(Exception ex)
+            {
+                return false;
+            }
+        } 
+
+        public bool AddAsistentes(int id, List<Asistente> asistentes)
+        {
+            try
+            {
+                OracleCommand cmd = new OracleCommand("sp_agregar_asistente_reserva", _context.GetConnection());
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                cmd.BindByName = true;
+                cmd.Parameters.Add("reserva_id", OracleDbType.Int32).Direction = ParameterDirection.Input;
+                cmd.Parameters.Add("pasaporte", OracleDbType.Varchar2).Direction = ParameterDirection.Input;
+                cmd.Parameters.Add("numrut", OracleDbType.Varchar2).Direction = ParameterDirection.Input;
+                cmd.Parameters.Add("dvrut", OracleDbType.Varchar2).Direction = ParameterDirection.Input;
+                cmd.Parameters.Add("pnombre", OracleDbType.Varchar2).Direction = ParameterDirection.Input;
+                cmd.Parameters.Add("snombre", OracleDbType.Varchar2).Direction = ParameterDirection.Input;
+                cmd.Parameters.Add("papellido", OracleDbType.Varchar2).Direction = ParameterDirection.Input;
+                cmd.Parameters.Add("sapellido", OracleDbType.Varchar2).Direction = ParameterDirection.Input;
+                cmd.Parameters.Add("correo", OracleDbType.Varchar2).Direction = ParameterDirection.Input;
+                cmd.Parameters.Add("saved", OracleDbType.Int32).Direction = ParameterDirection.Output;
+
+                foreach (Asistente asistente in asistentes)
+                {
+                    cmd.Parameters["reserva_id"].Value = id;
+                    cmd.Parameters["pasaporte"].Value = asistente.pasaporte;
+                    cmd.Parameters["numrut"].Value = asistente.numRut;
+                    cmd.Parameters["dvrut"].Value = asistente.dvRut;
+                    cmd.Parameters["pnombre"].Value = asistente.pNombre;
+                    cmd.Parameters["snombre"].Value = asistente.sNombre;
+                    cmd.Parameters["papellido"].Value = asistente.pApellido;
+                    cmd.Parameters["sapellido"].Value = asistente.sApellido;
+                    cmd.Parameters["correo"].Value = asistente.email;
+                    OracleDataReader reader = cmd.ExecuteReader();
+                    int saved = int.Parse(cmd.Parameters["saved"].Value.ToString());
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
         }
 
         // UPDATE RESERVA
