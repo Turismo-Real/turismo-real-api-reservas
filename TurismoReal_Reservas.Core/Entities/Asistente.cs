@@ -5,10 +5,10 @@
         public string pasaporte { get; set; }
         public string numRut { get; set; }
         public string dvRut { get; set; }
-        public string pNombre { get; set; }
-        public string sNombre { get; set; }
-        public string pApellido { get; set; }
-        public string sApellido { get; set; }
-        public string email { get; set; }
+        public string primerNombre { get; set; }
+        public string segundoNombre { get; set; }
+        public string primerApellido { get; set; }
+        public string segundoApellido { get; set; }
+        public string correo { get; set; }
     }
 }

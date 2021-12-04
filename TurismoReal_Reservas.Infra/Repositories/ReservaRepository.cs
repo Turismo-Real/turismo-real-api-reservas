@@ -178,11 +178,11 @@ namespace TurismoReal_Reservas.Infra.Repositories
                     cmd.Parameters["pasaporte"].Value = asistente.pasaporte;
                     cmd.Parameters["numrut"].Value = asistente.numRut;
                     cmd.Parameters["dvrut"].Value = asistente.dvRut;
-                    cmd.Parameters["pnombre"].Value = asistente.pNombre;
-                    cmd.Parameters["snombre"].Value = asistente.sNombre;
-                    cmd.Parameters["papellido"].Value = asistente.pApellido;
-                    cmd.Parameters["sapellido"].Value = asistente.sApellido;
-                    cmd.Parameters["correo"].Value = asistente.email;
+                    cmd.Parameters["pnombre"].Value = asistente.primerNombre;
+                    cmd.Parameters["snombre"].Value = asistente.segundoNombre;
+                    cmd.Parameters["papellido"].Value = asistente.primerApellido;
+                    cmd.Parameters["sapellido"].Value = asistente.segundoApellido;
+                    cmd.Parameters["correo"].Value = asistente.correo;
                     OracleDataReader reader = cmd.ExecuteReader();
                     int saved = int.Parse(cmd.Parameters["saved"].Value.ToString());
                 }
@@ -305,11 +305,11 @@ namespace TurismoReal_Reservas.Infra.Repositories
                 asistente.pasaporte = reader.GetValue(reader.GetOrdinal("pasaporte")).ToString();
                 asistente.numRut = reader.GetValue(reader.GetOrdinal("numrut_asistente")).ToString();
                 asistente.dvRut = reader.GetValue(reader.GetOrdinal("dvrut_asistente")).ToString();
-                asistente.pNombre = reader.GetValue(reader.GetOrdinal("pnombre_asistente")).ToString();
-                asistente.sNombre = reader.GetValue(reader.GetOrdinal("snombre_asistente")).ToString();
-                asistente.pApellido = reader.GetValue(reader.GetOrdinal("apepat_asistente")).ToString();
-                asistente.sApellido = reader.GetValue(reader.GetOrdinal("apemat_asistente")).ToString();
-                asistente.email = reader.GetValue(reader.GetOrdinal("correo_asistente")).ToString();
+                asistente.primerNombre = reader.GetValue(reader.GetOrdinal("pnombre_asistente")).ToString();
+                asistente.segundoNombre = reader.GetValue(reader.GetOrdinal("snombre_asistente")).ToString();
+                asistente.primerApellido = reader.GetValue(reader.GetOrdinal("apepat_asistente")).ToString();
+                asistente.segundoApellido = reader.GetValue(reader.GetOrdinal("apemat_asistente")).ToString();
+                asistente.correo = reader.GetValue(reader.GetOrdinal("correo_asistente")).ToString();
                 asistentes.Add(asistente);
             }
             return asistentes;
